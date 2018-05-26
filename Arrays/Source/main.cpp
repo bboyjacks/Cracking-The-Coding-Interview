@@ -108,6 +108,70 @@ std::string CompressStr(const std::string& _str)
   }
 }
 
+// Problem 1.6
+void Rotate90DegreesRight(int* _matrix, int _width, int _height)
+{
+  const auto getIndex = [&_width](int x, int y) { return x + y * _width; };
+  for (unsigned int j = 0; j < (int)(_height / 2); j++)
+  {
+    for (unsigned int i = j; i < _width - 1 - j; i++)
+    {
+      int x = i;
+      int y = j;
+      int index = getIndex(x, y);
+      int put_val = _matrix[index];
+      int hold_val = _matrix[index];
+      for (unsigned int t = 0; t < 4; t++)
+      {
+        const int x_i = _width - 1 - y;
+        const int y_i = x;
+        index = getIndex(x_i, y_i);
+        hold_val = _matrix[index];
+        _matrix[index] = put_val;
+        put_val = hold_val;
+        x = x_i;
+        y = y_i;
+      }
+    }
+  }
+}
+
+void ZeroOutRowAndCol(int* _matrix, int _width, int _height)
+{
+  std::vector<bool> vis_row(_width, false);
+  std::vector<bool> vis_col(_height, false);
+
+  const auto getIndex = [&_width](const int x, const int y) {return x + y * _width; };
+  for (unsigned int y = 0; y < _height; y++)
+  {
+    for (unsigned int x = 0; x < _width; x++)
+    {
+      int index = getIndex(x, y);
+      if (_matrix[index] == 0)
+      {
+        if (!vis_row[x] && !vis_col[y])
+        {
+          vis_row[x] = true;
+          vis_col[y] = true;
+
+          for (unsigned int row_i = 0; row_i < _width; row_i++)
+          {
+            index = getIndex(row_i, y);
+            _matrix[index] = 0;
+          }
+
+          for (unsigned int col_i = 0; col_i < _height; col_i++)
+          {
+            int index = getIndex(x, col_i);
+            _matrix[index] = 0;
+          }
+        }
+      }
+    }
+  }
+
+}
+
 TEST(problem_1_2)
 {
   char* nullStr = nullptr;
@@ -150,6 +214,54 @@ TEST(problem_1_5)
 
   const std::string result3 = CompressStr("");
   ASSERT_STREQ("", result3.c_str());
+}
+
+TEST(problem_1_6)
+{
+  int matrix[] = {
+    0, 1, 2, 3,
+    4, 5, 6, 7,
+    8, 9, 10, 11,
+    12, 13, 14, 15
+  };
+
+  Rotate90DegreesRight(matrix, 4, 4);
+
+  const int expected_matrix_output[] = {
+    12, 8, 4, 0,
+    13, 9, 5, 1,
+    14, 10, 6, 2,
+    15, 11, 7, 3
+  };
+
+  for (unsigned int i = 0; i < 16; i++)
+  {
+    ASSERT_TRUE(expected_matrix_output[i] == matrix[i]);
+  }
+}
+
+TEST(problem_1_7)
+{
+  int matrix[] = {
+     0,  1,  2,  3,  4,  5,  6,  7,
+     8,  9, 10, 11,  0, 13, 14, 15,
+    16, 17, 18, 19, 20, 21, 22, 23,
+    24, 25, 26, 27, 28, 29, 30, 31
+  };
+
+  ZeroOutRowAndCol(matrix, 8, 4);
+
+  const int expected_matrix_output[] = {
+     0,  0,  0,  0,  0,  0,  0,  0,
+     0,  0,  0,  0,  0,  0,  0,  0,
+     0, 17, 18, 19,  0, 21, 22, 23,
+     0, 25, 26, 27,  0, 29, 30, 31
+  };
+
+  for (unsigned int i = 0; i < 32; i++)
+  {
+    EXPECT_EQ(expected_matrix_output[i], matrix[i]);
+  }
 }
 
 int main(int argc, char **argv)
