@@ -8,3 +8,11 @@
 *.pdf
 *.log
 *.tlog
+*.exe
+*.ilk
+*/*.exe
+*/*.ilk
+*/*.pdb
+/Debug/*
+.vs/
+Debug/*
