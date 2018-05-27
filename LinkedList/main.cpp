@@ -1,4 +1,5 @@
 #include <iostream>
+#include "LinkedList.h"
 #include "Node.h"
 
 int main()
@@ -7,13 +8,16 @@ int main()
   Node* second;
   Node* third;
   {
-    Node nodes(2);
-    nodes.PushBack(3);
-    nodes.PushBack(4);
+    LinkedList list;
+    list.PushBack(2);
+    list.PushBack(3);
+    list.PushBack(4);
 
-    first = &nodes;
-    second = nodes.m_next;
-    third = nodes.m_next->m_next;
+    list.PrintList();
+
+    first = list.top_node;
+    second = list.top_node->m_next;
+    third = list.top_node->m_next->m_next;
     
     if (first != nullptr)
       std::cout << "First not null" << std::endl;
@@ -21,6 +25,17 @@ int main()
       std::cout << "Second not null" << std::endl;
     if (third != nullptr)
       std::cout << "Third is not null" << std::endl;
+    
+    list.Delete(5);
+    list.PrintList();
+    list.Delete(2);
+    list.PrintList();
+    list.Delete(3);
+    list.PrintList();
+    list.Delete(4);
+    list.PrintList();
+    list.Delete(10);
+    list.PrintList();
   }
 
   if (first == nullptr)
