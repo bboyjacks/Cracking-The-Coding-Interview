@@ -5,8 +5,8 @@ class Node;
 class LinkedList
 {
 public:
-  Node * top_node{ nullptr };
-  Node* cur_node{ nullptr };
+  Node * m_top_node{ nullptr };
+  Node* m_cur_node{ nullptr };
 
   LinkedList();
 
